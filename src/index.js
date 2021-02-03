@@ -60,9 +60,19 @@ let featureName = '';
 let currentBranch = '';
 
 // ROUTES
-// git.post('/changeBranch', (request, response) => {
+// app.post('/changeBranch', (request, response) => {
 //   currentBranch = request.body.branchName;
 //   shell.exec(`git checkout ${currentBranch}`);
+
+//   return response.json();
+// });
+
+// app.post('/deletBranch', (request, response) => {
+//   currentBranch = request.body.branchName;
+//   shell.exec(`git branch -D ${currentBranch}`);
+  
+//   //git branch -d currentBranch
+//   //git branch -D currentBranch -> remove mesmo que nao haja commits
 
 //   return response.json();
 // });
@@ -88,13 +98,14 @@ app.post('/sendChanges', (request, response) => {
   shell.exec('git add -A');
   shell.exec(`git commit -m "${commitMessage}"`);
   shell.exec(`git push --set-upstream origin ${currentBranch}`);
-  //delete branch local
-  //pull request via CLI ou CI server pipipi popopo 
-  
+  shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body" --label "automerge"`)
+
+
+  //verificar o merge nativo do git
+  //habilitar a deleção de branch remota após merge (config repo) 
   return response.json();
 });
 // ROUTES
-
 
 app.listen(3333, () => {
   console.log('🚀 Back-end started')
