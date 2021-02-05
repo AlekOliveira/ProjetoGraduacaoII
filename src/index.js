@@ -68,8 +68,8 @@ let currentBranch = '';
 // });
 
 // app.post('/deletBranch', (request, response) => {
-//   currentBranch = request.body.branchName;
-//   shell.exec(`git branch -D ${currentBranch}`);
+//   //name = request.body.branchName;
+//   //shell.exec(`git branch -D ${name}`);
   
 //   //git branch -d currentBranch
 //   //git branch -D currentBranch -> remove mesmo que nao haja commits
@@ -98,7 +98,7 @@ app.post('/sendChanges', (request, response) => {
   shell.exec('git add -A');
   shell.exec(`git commit -m "${commitMessage}"`);
   shell.exec(`git push --set-upstream origin ${currentBranch}`);
-  shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body" --label "automerge"`)
+  shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body" --label "automerge"`);
 
 
   //verificar o merge nativo do git
