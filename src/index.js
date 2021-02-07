@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const shell = require('shelljs');
-const { request } = require('express');
+const pathResolve = require('path'); 
 
+const { request, response } = require('express');
 const app = express();
 
 app.use(cors());
@@ -67,7 +68,7 @@ let currentBranch = '';
 //   return response.json();
 // });
 
-// app.post('/deletBranch', (request, response) => {
+// app.post('/deleteLocalBranch', (request, response) => {
 //   //name = request.body.branchName;
 //   //shell.exec(`git branch -D ${name}`);
   
@@ -76,6 +77,26 @@ let currentBranch = '';
 
 //   return response.json();
 // });
+
+app.get('/configRepo', (request, response) => {  
+  shell.mkdir('.github');
+  shell.cd('.github');
+
+  shell.mkdir('workflows'); 
+  shell.cd('workflows');
+
+  const workflowFilesPath = pathResolve.join(__dirname, '..\\workflowFiles');
+  const command = `copy ${workflowFilesPath} ${shell.dirs()}`;
+  shell.exec(command);
+
+  return response.json();
+});
+
+app.post('/clone', (request, response) => {
+  shell.exec(`git clone ${request.body.repositoryUrl}`);  
+
+  return response.json();
+});
 
 app.post('/changePath', (request, response) => {   
   path = request.body.path; //path = path.concat('\\.git');
@@ -100,9 +121,6 @@ app.post('/sendChanges', (request, response) => {
   shell.exec(`git push --set-upstream origin ${currentBranch}`);
   shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body" --label "automerge"`);
 
-
-  //verificar o merge nativo do git
-  //habilitar a deleção de branch remota após merge (config repo) 
   return response.json();
 });
 // ROUTES
@@ -110,3 +128,9 @@ app.post('/sendChanges', (request, response) => {
 app.listen(3333, () => {
   console.log('🚀 Back-end started')
 });
+
+/**
+ * TO-DO
+ * verify git native merge
+ * delete remote branch after auto-merge(repo configs) 
+ */
