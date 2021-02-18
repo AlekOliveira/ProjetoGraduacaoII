@@ -56,51 +56,68 @@ app.use(express.json());
 // }
 //app.use(logRequests);
 
-let path = '';
+let root = '';
 let featureName = '';
 let currentBranch = '';
 
 // ROUTES
-// app.post('/changeBranch', (request, response) => {
-//   currentBranch = request.body.branchName;
-//   shell.exec(`git checkout ${currentBranch}`);
-
-//   return response.json();
-// });
-
 // app.post('/deleteLocalBranch', (request, response) => {
 //   //name = request.body.branchName;
 //   //shell.exec(`git branch -D ${name}`);
   
 //   //git branch -d currentBranch
-//   //git branch -D currentBranch -> remove mesmo que nao haja commits
+//   //git branch -D currentBranch -> force branch removal
 
 //   return response.json();
 // });
 
+app.post('/switchBranch', (request, response) => {
+  currentBranch = request.body.branchName;
+  shell.exec(`git checkout ${currentBranch}`);
+
+  return response.json();
+});
+
 app.get('/configRepo', (request, response) => {  
+  let command = '';
+
+  //install Jest dependencies + dummy test
+  shell.exec('yarn add jest -D');
+  shell.cd('src');
+  shell.mkdir('_tests_');
+  shell.cd('_tests_');
+  const testFilesPath = pathResolve.join(__dirname, '..\\testFiles');
+  command = `copy ${testFilesPath} ${shell.dirs()}`;
+  shell.exec(command);
+  //install Jest dependencies + dummy test  
+
+  shell.cd(root);
+
+  //config CI workflows  
   shell.mkdir('.github');
   shell.cd('.github');
-
   shell.mkdir('workflows'); 
   shell.cd('workflows');
-
   const workflowFilesPath = pathResolve.join(__dirname, '..\\workflowFiles');
-  const command = `copy ${workflowFilesPath} ${shell.dirs()}`;
+  command = `copy ${workflowFilesPath} ${shell.dirs()}`;
   shell.exec(command);
+  //config CI workflows 
+
+  shell.cd(root);
 
   return response.json();
 });
 
 app.post('/clone', (request, response) => {
-  shell.exec(`git clone ${request.body.repositoryUrl}`);  
-
+  shell.exec(`git clone ${request.body.repositoryUrl}`);
+  //entrar na pasta do repo clonado?  
+  
   return response.json();
 });
 
 app.post('/changePath', (request, response) => {   
-  path = request.body.path; //path = path.concat('\\.git');
-  shell.cd(path);
+  root = request.body.path; //path = path.concat('\\.git');
+  shell.cd(root);
 
   return response.json(shell.ls());
 });
@@ -114,7 +131,8 @@ app.post('/newFeature', (request, response) => {
 });
 
 app.post('/sendChanges', (request, response) => {
-  const commitMessage = request.body.commitMessage;  
+  const commitMessage = request.body.commitMessage;
+  //const description = request.body.description;  
   
   shell.exec('git add -A');
   shell.exec(`git commit -m "${commitMessage}"`);
