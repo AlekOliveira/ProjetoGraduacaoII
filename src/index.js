@@ -72,6 +72,7 @@ let currentBranch = '';
 // });
 
 app.post('/switchBranch', (request, response) => {
+  //validar caso tenha unstaged changes
   currentBranch = request.body.branchName;
   shell.exec(`git checkout ${currentBranch}`);
 
@@ -145,7 +146,7 @@ app.post('/sendChanges', (request, response) => {
   shell.exec(`git push --set-upstream origin ${currentBranch}`);
   shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body"`);
   shell.exec(`gh pr merge ${currentBranch} -m`); 
-  console.log('->>>>'+currentBranch);
+  
   return response.json();
 });
 // ROUTES
