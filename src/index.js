@@ -79,9 +79,14 @@ app.post('/switchBranch', (request, response) => {
 });
 
 app.get('/configRepo', (request, response) => {  
+
+  //add tudo na branch principal. na primeira config
+  // add && push
   let command = '';
 
   //install Jest dependencies + dummy test
+
+  //verificar se o proj utiliza yarn ou npm através dos arquivos de lock
   shell.exec('yarn add jest -D');
   shell.cd('src');
   shell.mkdir('_tests_');
@@ -102,6 +107,7 @@ app.get('/configRepo', (request, response) => {
   command = `copy ${workflowFilesPath} ${shell.dirs()}`;
   shell.exec(command);
   //config CI workflows 
+
 
   shell.cd(root);
 
@@ -137,7 +143,8 @@ app.post('/sendChanges', (request, response) => {
   shell.exec('git add -A');
   shell.exec(`git commit -m "${commitMessage}"`);
   shell.exec(`git push --set-upstream origin ${currentBranch}`);
-  shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body" --label "automerge"`);
+  shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body" --auto`);
+  shell.exec(`gh pr merge ${currentBranch} --auto`);
 
   return response.json();
 });
