@@ -145,7 +145,7 @@ app.post('/sendChanges', (request, response) => {
   shell.exec(`git commit -m "${commitMessage}"`);
   shell.exec(`git push --set-upstream origin ${currentBranch}`);
   shell.exec(`gh pr create --title "${commitMessage}" --body "pull request body"`);
-  shell.exec(`gh pr merge ${currentBranch} -m`); 
+  shell.exec(`gh pr merge ${currentBranch} --auto -d -m`); 
   
   return response.json();
 });
