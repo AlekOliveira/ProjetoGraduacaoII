@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
-const VersaoSchema = new mongoose.Schema({  
+const VersaoArquivoSchema = new mongoose.Schema({  
   fk_idArquivo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Arquivo',
@@ -27,5 +27,5 @@ const VersaoSchema = new mongoose.Schema({
   },
 });
 
-VersaoSchema.plugin(mongoosePaginate);
-mongoose.model('Versao', VersaoSchema); 
+VersaoArquivoSchema.plugin(mongoosePaginate);
+mongoose.model('VersaoArquivo', VersaoArquivoSchema); 
