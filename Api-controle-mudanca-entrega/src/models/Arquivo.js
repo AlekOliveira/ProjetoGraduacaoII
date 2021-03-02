@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
-const FuncaoSistemaSchema = new mongoose.Schema({
-  caminho: {
+const ArquivoSchema = new mongoose.Schema({
+  nome: {
     type: String,
     required: true,
   },  
@@ -12,5 +12,5 @@ const FuncaoSistemaSchema = new mongoose.Schema({
   },
 });
 
-FuncaoSistemaSchema.plugin(mongoosePaginate);
-mongoose.model('FuncaoSistema', FuncaoSistemaSchema); 
+ArquivoSchema.plugin(mongoosePaginate);
+mongoose.model('Arquivo', ArquivoSchema); 

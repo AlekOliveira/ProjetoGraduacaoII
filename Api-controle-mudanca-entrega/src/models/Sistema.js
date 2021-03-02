@@ -22,7 +22,7 @@ const SistemaSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  usuario: {
+  login: {
     type: String,
     required: true,
   },
