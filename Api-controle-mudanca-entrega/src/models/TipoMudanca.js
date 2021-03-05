@@ -3,7 +3,7 @@ const mongoosePaginate = require('mongoose-paginate');
 
 const TipoMudancaSchema = new mongoose.Schema({    
   tipo: {
-    type: Number,
+    type: String,
     required: true,
   },
   createdAt: {
