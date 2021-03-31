@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const shell = require('shelljs');
-const pathResolve = require('path'); 
+const pathResolve = require('path');
+const hasYarn = require('has-yarn');
 
 const { request, response } = require('express');
 const app = express();
@@ -62,17 +63,19 @@ let currentBranch = '';
 
 // ROUTES
 // app.post('/deleteLocalBranch', (request, response) => {
-//   //name = request.body.branchName;
-//   //shell.exec(`git branch -D ${name}`);
+//   name = request.body.branchName;
+//   shell.exec(`git branch -D ${name}`);
   
-//   //git branch -d currentBranch
-//   //git branch -D currentBranch -> force branch removal
+//   git branch -d currentBranch
+//   git branch -D currentBranch -> force branch removal
 
 //   return response.json();
 // });
 
 app.post('/switchBranch', (request, response) => {
-  //validar caso tenha unstaged changes
+  //validar caso tenha unstaged changes.
+  //pode ser resolvido com um discard.
+  //pode ser resolvido com um commit.
   currentBranch = request.body.branchName;
   shell.exec(`git checkout ${currentBranch}`);
 
@@ -80,22 +83,31 @@ app.post('/switchBranch', (request, response) => {
 });
 
 app.get('/configRepo', (request, response) => {  
-
-  //add tudo na branch principal. na primeira config
-  // add && push
+  console.log(root);
+  // //add tudo na branch principal. na primeira config
+  // // add && push
   let command = '';
-
-  //install Jest dependencies + dummy test
-
-  //verificar se o proj utiliza yarn ou npm através dos arquivos de lock
-  shell.exec('yarn add jest -D');
+  
+  
+  /**
+   * verifica qual gerenciador de dependencias o projeto utiliza
+   * e instala o framework de testes de acordo com o gerenciador
+   * utilizado.
+   */
+  if(hasYarn(root)) {
+    shell.exec('yarn add jest -D');
+  } else {
+    shell.exec('npm i -D jest');
+  }
+  
+  /**Cria um diretório com um teste de exemplo */
   shell.cd('src');
   shell.mkdir('_tests_');
   shell.cd('_tests_');
   const testFilesPath = pathResolve.join(__dirname, '..\\testFiles');
   command = `copy ${testFilesPath} ${shell.dirs()}`;
   shell.exec(command);
-  //install Jest dependencies + dummy test  
+  /**Cria um diretório com um teste de exemplo */ 
 
   shell.cd(root);
 
@@ -108,7 +120,6 @@ app.get('/configRepo', (request, response) => {
   command = `copy ${workflowFilesPath} ${shell.dirs()}`;
   shell.exec(command);
   //config CI workflows 
-
 
   shell.cd(root);
 
@@ -157,6 +168,5 @@ app.listen(3333, () => {
 
 /**
  * TO-DO
- * verify git native merge
  * delete remote branch after auto-merge(repo configs) 
  */
