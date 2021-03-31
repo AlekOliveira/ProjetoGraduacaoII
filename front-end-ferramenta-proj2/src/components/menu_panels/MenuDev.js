@@ -23,11 +23,14 @@ function MenuDev() {
         </select>
       </>
       
-      <>
+      <>  
+        <br/>
         <button>Nova Mudança</button>
-        <button>Nova Mudança</button>
-        <button>Nova Mudança</button>
-        <button>Nova Mudança</button>
+        <br/>
+        <button>Retirar para correção</button>
+        <br/>
+        <button>Enviar Mudanças</button>
+        <br/>
       </>
       <p>Delegadis gente finis, bibendum egestas augue arcu ut est. Pra lá , depois divoltis porris, paradis. Casamentiss faiz malandris se pirulitá. Nec orci ornare consequat. Praesent lacinia ultrices consectetur. Sed non ipsum felis.</p>
     </main>

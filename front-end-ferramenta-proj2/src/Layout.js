@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Aside from './Aside';
 import Main from './Main';
 import MenuDev from './components/menu_panels/MenuDev';
-import apiCICD from './services/apiCICD';
+import MenuCICD from './components/menu_panels/MenuCICD';
+import StartPage from './components/menu_panels/StartPage';
 
+// API'S
+import apiCICD from './services/apiCICD';
 
 function Layout({ setLocale }) {
   const [rtl, setRtl] = useState(false);
@@ -48,6 +51,10 @@ function Layout({ setLocale }) {
     setToggled(value);
   };
 
+  // const handlePage = (value) => {
+  //   setPage(value);
+  // };
+
   return (
     <div className={`app ${rtl ? 'rtl' : ''} ${toggled ? 'toggled' : ''}`}>
       <Aside
@@ -59,14 +66,18 @@ function Layout({ setLocale }) {
         // setPage={setPage}
       />
       
-      {/* <>
-        { 
-          page == 0 ? (<h1>page 0</h1>) : (page == 1 ? (<h1>page 1</h1>) : null)
-        }
-      </> */}
+      {/* 
+        <>
+          { 
+            page == 0 ? (<h1>page 0</h1>) : (page == 1 ? (<h1>page 1</h1>) : null)
+          }
+        </> 
+      */}
 
       <>
-        <MenuDev />
+        {/* <MenuDev /> */}
+        <StartPage />
+        {/* <MenuCICD /> */}
       </>
 
       {/* <Main
