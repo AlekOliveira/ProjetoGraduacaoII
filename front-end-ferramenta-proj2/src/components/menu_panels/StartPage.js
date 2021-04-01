@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { FaCodeBranch, FaRocket } from 'react-icons/fa';
+const { dialog } = require('electron')
 
 
 function StartPage() {
 
-  function abc (){
-    alert('cu');
+  function test (){
+    alert('aa');
   }
 
   return(
@@ -20,8 +21,8 @@ function StartPage() {
         </b>
       </p>
 
-      <input directory="" webkitdirectory="" type="file" />
-      <button onClick={abc}>Abrir um projeto</button>
+      
+      <button onClick={test}>Abrir um projeto</button>
       <br/>
       <button>Clonar projeto</button> 
       {/* 
