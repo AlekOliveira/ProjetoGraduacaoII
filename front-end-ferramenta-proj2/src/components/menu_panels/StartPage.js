@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { FaCodeBranch, FaRocket } from 'react-icons/fa';
-const { dialog } = require('electron')
-
 
 function StartPage() {
 
@@ -30,6 +28,10 @@ function StartPage() {
             caso não, é inicializado o assistente de configuração.
         Estando configurado, o usuario é direcionado para a pagina de desenvolvimento.
       */}
+
+
+
+      <input type="file"  webkitdirectory="true" directory multiple/>
     </main>    
   );
 }

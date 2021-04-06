@@ -10,6 +10,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//cwd - current working directory
+let cwd = '';
+let featureName = '';
+let currentBranch = '';
+
 /**
  * Métodos HTTP:
  * 
@@ -27,40 +32,6 @@ app.use(express.json());
 * Request Body: Conteúdo na hora de criar ou editar um recurso (JSON)
 */
 
-/**
- * Middleware:
- * 
- * Interceptador de requisições que pode interromper totalmente a requisição ou alterar dados da requisição.
- */
-
-// function logRequests(request, response, next) {
-//   const { method, url } = request;
-
-//   /**
-//    * O método "toUppercase" precisa ser chamado sem os parênteses para que não 
-//    * apresente erro no insomnia, por exemplo
-//    * 
-//    * Antes:
-//    * const logLabel = `[${method.toUppercase()} ${url}]`;
-//    * 
-//    * Depois:
-//    * const logLabel = `[${method.toUppercase} ${url}]`;
-//    */
-  
-//   const logLabel = `[${method.toUppercase} ${url}]`;
-
-//   console.time(logLabel);
-
-//   next(); // Próximo middleware
-
-//   console.timeEnd(logLabel);
-// }
-//app.use(logRequests);
-
-let root = '';
-let featureName = '';
-let currentBranch = '';
-
 // ROUTES
 // app.post('/deleteLocalBranch', (request, response) => {
 //   name = request.body.branchName;
@@ -72,29 +43,40 @@ let currentBranch = '';
 //   return response.json();
 // });
 
+app.get('/myRepos', (req, res) => {
+  const reposPath = pathResolve.join(__dirname, '..\\repos');
+  shell.cd(reposPath);
+  
+  return res.json(shell.ls());
+});
+
 app.post('/switchBranch', (request, response) => {
   //validar caso tenha unstaged changes.
-  //pode ser resolvido com um discard.
-  //pode ser resolvido com um commit.
+  //pode ser resolvido com um git discard || git commit.
   currentBranch = request.body.branchName;
   shell.exec(`git checkout ${currentBranch}`);
 
   return response.json();
 });
 
-app.get('/configRepo', (request, response) => {  
-  console.log(root);
-  // //add tudo na branch principal. na primeira config
-  // // add && push
-  let command = '';
+app.get('/openVscode', (req, res) => {
+  const cmd = 'code .';
+  shell.exec(cmd);
   
+  return res.json();
+});
+
+app.get('/configRepo', (request, response) => {  
+  console.log(cwd);
+  //add tudo na branch principal. na primeira config
+  // add && push
+  let command = '';  
   
   /**
-   * verifica qual gerenciador de dependencias o projeto utiliza
-   * e instala o framework de testes de acordo com o gerenciador
-   * utilizado.
-   */
-  if(hasYarn(root)) {
+   * 1-verifica qual gerenciador de dependencias o projeto utiliza
+   * 2-instala o framework jest para npm ou yarn
+   */  
+  if(hasYarn(cwd)) {
     shell.exec('yarn add jest -D');
   } else {
     shell.exec('npm i -D jest');
@@ -109,7 +91,7 @@ app.get('/configRepo', (request, response) => {
   shell.exec(command);
   /**Cria um diretório com um teste de exemplo */ 
 
-  shell.cd(root);
+  shell.cd(cwd);
 
   //config CI workflows  
   shell.mkdir('.github');
@@ -121,7 +103,7 @@ app.get('/configRepo', (request, response) => {
   shell.exec(command);
   //config CI workflows 
 
-  shell.cd(root);
+  shell.cd(cwd);
 
   return response.json();
 });
@@ -133,11 +115,18 @@ app.post('/clone', (request, response) => {
   return response.json();
 });
 
-app.post('/changePath', (request, response) => {   
-  root = request.body.path; //path = path.concat('\\.git');
-  shell.cd(root);
+// app.post('/changePath', (request, response) => {   
+//   cwd = request.body.path; //path = path.concat('\\.git');
+//   shell.cd(cwd);
 
-  return response.json(shell.ls());
+//   return response.json(shell.ls());
+// });
+
+app.post('/selectRepo', (req, res) => {   console.log(req.body.repo);
+  cwd = pathResolve.join(__dirname, '..\\repos', req.body.repo);  
+  shell.cd(cwd);
+
+  return res.json(shell.ls());
 });
 
 app.post('/newFeature', (request, response) => {
