@@ -18,13 +18,14 @@ function Layout({ setLocale }) {
 
   
   
-  /*********TESTE API ************************************************/
+  /*********EXEMPLO DE CONSUMO DA API ************************************************/
   // let result;
   // apiCICD.post('changePath', {
   //   path:'C:\\Users\\alexa\\Desktop\\Nodejs_auto_deploy-main'
   // }).then(res => {  
   // });
-  // const [res, setProjects] = useState([]);
+  
+  const [res, setProjects] = useState([]);
 
   // useEffect(() =>{ console.log('chamou api');
   //   apiCICD.post('changePath', {
@@ -33,7 +34,7 @@ function Layout({ setLocale }) {
   //     setProjects(response.data);
   //   });  
   // }, [])
-  /*********TESTE API ************************************************/
+  /*********EXEMPLO DE CONSUMO DA API ************************************************/
   
   const handleCollapsedChange = (checked) => {
     setCollapsed(checked);

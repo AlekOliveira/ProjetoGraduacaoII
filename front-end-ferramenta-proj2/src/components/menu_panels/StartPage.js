@@ -1,10 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaCodeBranch, FaRocket } from 'react-icons/fa';
+import { CustomDialog, useDialog } from 'react-st-modal';
+
+import apiCICD from '../../services/apiCICD';
 
 function StartPage() {
+  const [myRepos, setMyRepos] = useState([]);
+
+  useEffect(() =>{ 
+    apiCICD.get('myRepos').then(response => {  
+      console.log(response.data);    
+      setMyRepos(response.data);
+    });
+  }, [])
 
   function test (){
-    alert('aa');
+    alert('olá mundo');
+  }
+
+  async function showModal() {
+    const result = await CustomDialog(
+      <>
+        <ul>
+          {myRepos.map(repo => 
+              <>
+                <li key={repo}><button>test</button> - {repo}</li>
+              </>              
+            )
+          }
+        </ul>
+      </>,
+        {
+          title: 'Custom Dialog',
+          showCloseIcon: false,
+          isBodyScrollLocked: true,
+          replaceScrollBar: true,
+        }      
+    );
+
+    if (result) {
+      // Сonfirmation confirmed
+    } else {
+      // Сonfirmation not confirmed
+    }
   }
 
   return(
@@ -20,18 +58,35 @@ function StartPage() {
       </p>
 
       
-      <button onClick={test}>Abrir um projeto</button>
+      <button onClick={showModal}>Abrir um projeto</button>
       <br/>
-      <button>Clonar projeto</button> 
+      <button onClick={test}>Clonar projeto</button>  
+      
       {/* 
-        Após abrir um projeto, verifica se o mesmo já está configurado.
+        Após abrir um projeto, verificar se o mesmo já está configurado.
             caso não, é inicializado o assistente de configuração.
         Estando configurado, o usuario é direcionado para a pagina de desenvolvimento.
       */}
 
 
+      {/* <button
+        onClick={async () => {
+          const result = await CustomDialog(
+            <CustomDialogContent />,
+            {
+              title: 'Custom Dialog',
+              showCloseIcon: true,
+              isBodyScrollLocked: false,
+              replaceScrollBar: false,
+            }
+          );
+        }}
+      >
+        Custom
+      </button> */}
 
-      <input type="file"  webkitdirectory="true" directory multiple/>
+
+
     </main>    
   );
 }

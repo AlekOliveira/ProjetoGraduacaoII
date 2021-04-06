@@ -122,7 +122,7 @@ app.post('/clone', (request, response) => {
 //   return response.json(shell.ls());
 // });
 
-app.post('/selectRepo', (req, res) => {   console.log(req.body.repo);
+app.post('/selectRepo', (req, res) => { 
   cwd = pathResolve.join(__dirname, '..\\repos', req.body.repo);  
   shell.cd(cwd);
 
