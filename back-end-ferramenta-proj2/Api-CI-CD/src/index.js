@@ -15,23 +15,6 @@ let cwd = '';
 let featureName = '';
 let currentBranch = '';
 
-/**
- * Métodos HTTP:
- * 
- * GET: Buscar informações do back-end
- * POST: Criar uma informação no back-end
- * PUT/PATCH: Alterar uma informação no back-end
- * DELETE: Deletar uma informação no back-end
- */
-
-/**
-* Tipos de parâmetros:
-* 
-* Query Params: Filtros e paginação
-* Route Params: Identificar recursos (Atualizar/Deletar)
-* Request Body: Conteúdo na hora de criar ou editar um recurso (JSON)
-*/
-
 // ROUTES
 // app.post('/deleteLocalBranch', (request, response) => {
 //   name = request.body.branchName;
@@ -77,8 +60,10 @@ app.get('/configRepo', (request, response) => {
    * 2-instala o framework jest para npm ou yarn
    */  
   if(hasYarn(cwd)) {
+    //console.log('este projeto utiliza yarn');
     shell.exec('yarn add jest -D');
   } else {
+    //console.log('este projeto utiliza npm');
     shell.exec('npm i -D jest');
   }
   
@@ -98,7 +83,13 @@ app.get('/configRepo', (request, response) => {
   shell.cd('.github');
   shell.mkdir('workflows'); 
   shell.cd('workflows');
-  const workflowFilesPath = pathResolve.join(__dirname, '..\\workflowFiles');
+
+  const workflowFilesPath =
+    hasYarn(cwd) ?
+      pathResolve.join(__dirname, '..\\workflowFiles\\yarn')
+      :
+      pathResolve.join(__dirname, '..\\workflowFiles\\npm');
+  
   command = `copy ${workflowFilesPath} ${shell.dirs()}`;
   shell.exec(command);
   //config CI workflows 
@@ -141,6 +132,7 @@ app.post('/sendChanges', (request, response) => {
   const commitMessage = request.body.commitMessage;
   //const description = request.body.description;  
   
+  //git status
   shell.exec('git add -A');
   shell.exec(`git commit -m "${commitMessage}"`);
   shell.exec(`git push --set-upstream origin ${currentBranch}`);

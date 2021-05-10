@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaCodeBranch, FaRocket } from 'react-icons/fa';
+import { FaRocket } from 'react-icons/fa';
 import { CustomDialog, useDialog } from 'react-st-modal';
 
 import apiCICD from '../../services/apiCICD';
@@ -14,25 +14,42 @@ function StartPage() {
     });
   }, [])
 
-  function test (){
-    alert('olá mundo');
-  }
-
-  async function showModal() {
+  async function modalRepositorios() {
     const result = await CustomDialog(
       <>
         <ul>
-          {myRepos.map(repo => 
-              <>
-                <li key={repo}><button>test</button> - {repo}</li>
-              </>              
-            )
+          {myRepos.map(repo =>
+            <>
+              <li key={repo}><button>{repo}</button></li>              
+            </>
+          )
           }
         </ul>
       </>,
         {
-          title: 'Custom Dialog',
-          showCloseIcon: false,
+          title: 'Repositórios disponíveis',
+          showCloseIcon: true,
+          isBodyScrollLocked: true,
+          replaceScrollBar: true,
+        }      
+    );
+
+    if (result) {
+      // Сonfirmation confirmed
+    } else {
+      // Сonfirmation not confirmed
+    }
+  }
+
+  async function modalClone() {
+    const result = await CustomDialog(
+      <>
+        <input type="text" placeholder=""/>
+        <button>Clonar!</button>
+      </>,
+        {
+          title: 'Clonar Repositório',
+          showCloseIcon: true,
           isBodyScrollLocked: true,
           replaceScrollBar: true,
         }      
@@ -58,9 +75,9 @@ function StartPage() {
       </p>
 
       
-      <button onClick={showModal}>Abrir um projeto</button>
+      <button onClick={modalRepositorios}>Selecionar um repositório</button>
       <br/>
-      <button onClick={test}>Clonar projeto</button>  
+      <button onClick={modalClone}>Clonar repositório</button>  
       
       {/* 
         Após abrir um projeto, verificar se o mesmo já está configurado.

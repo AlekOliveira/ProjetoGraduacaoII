@@ -16,6 +16,7 @@ function Layout({ setLocale }) {
   // const [page, setPage] = useState(0);
   const [menu_panel] = useState(1);
 
+
   
   
   /*********EXEMPLO DE CONSUMO DA API ************************************************/
