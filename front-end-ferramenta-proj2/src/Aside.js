@@ -16,19 +16,19 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
   const intl = useIntl();
 
   async function handleMenuDesenvolver() { 
-    alert('olá')
+    setPage('menu-desenvolver');
   }
 
   async function handleMenuUsuario() {
-    alert('Usuario');
+    setPage('menu-usuario');
   }
 
   async function handleMenuCICD() {
-    alert('CICD');
+    setPage('menu-cicd');
   }
 
   async function handleMenuDeploy() {
-    alert('Deploy');
+    setPage('menu-deploy');
   }
 
   return (

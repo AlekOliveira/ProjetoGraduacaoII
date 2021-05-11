@@ -13,11 +13,8 @@ function Layout({ setLocale }) {
   const [collapsed, setCollapsed] = useState(false);
   const [image, setImage] = useState(true);
   const [toggled, setToggled] = useState(false);
-  // const [page, setPage] = useState(0);
+  const [page, setPage] = useState('page-start');
   const [menu_panel] = useState(1);
-
-
-  
   
   /*********EXEMPLO DE CONSUMO DA API ************************************************/
   // let result;
@@ -53,10 +50,19 @@ function Layout({ setLocale }) {
     setToggled(value);
   };
 
-  // const handlePage = (value) => {
-  //   setPage(value);
-  // };
-
+  function renderMenu() {
+    switch (page) {
+      case 'page-start':
+        return <StartPage />;
+      case 'menu-cicd':
+        return <MenuCICD />;
+      case 'menu-desenvolver':
+        return <MenuDev />;
+      default:
+        return <StartPage />;
+    }
+  }
+  
   return (
     <div className={`app ${rtl ? 'rtl' : ''} ${toggled ? 'toggled' : ''}`}>
       <Aside
@@ -65,33 +71,13 @@ function Layout({ setLocale }) {
         rtl={rtl}
         toggled={toggled}
         handleToggleSidebar={handleToggleSidebar}
-        // setPage={setPage}
+        setPage={setPage}
       />
       
-      {/* 
-        <>
-          { 
-            page == 0 ? (<h1>page 0</h1>) : (page == 1 ? (<h1>page 1</h1>) : null)
-          }
-        </> 
-      */}
-
       <>
-        {/* <MenuDev /> */}
-        <StartPage />
-        {/* <MenuCICD /> */}
+        {renderMenu()}
       </>
 
-      {/* <Main
-        image={image}
-        toggled={toggled}
-        collapsed={collapsed}
-        rtl={rtl}
-        handleToggleSidebar={handleToggleSidebar}
-        handleCollapsedChange={handleCollapsedChange}
-        handleRtlChange={handleRtlChange}
-        handleImageChange={handleImageChange}
-      /> */}
     </div>
   );
 }
