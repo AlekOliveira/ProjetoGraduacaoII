@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useIntl } from 'react-intl';
 import {
   ProSidebar,
@@ -31,6 +32,10 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
     setPage('menu-deploy');
   }
 
+  async function handleHome() {
+    setPage('home');
+  }
+
   return (
     <ProSidebar
       //image={image ? sidebarBg : false}
@@ -40,6 +45,7 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
       toggled={toggled}
       breakPoint="md"
       onToggle={handleToggleSidebar}
+      onClick={ handleHome }
     >
       <SidebarHeader>
         <div
