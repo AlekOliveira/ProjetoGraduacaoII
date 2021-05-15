@@ -10,7 +10,7 @@ import {
   SidebarFooter,
   SidebarContent,
 } from 'react-pro-sidebar';
-import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaCog, FaCodeBranch, FaCogs, FaRocket } from 'react-icons/fa';
+import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaCog, FaCodeBranch, FaCogs, FaRocket, FaHome } from 'react-icons/fa';
 import sidebarBg from './assets/bg1.jpg';
 
 const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) => {
@@ -45,7 +45,6 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
       toggled={toggled}
       breakPoint="md"
       onToggle={handleToggleSidebar}
-      onClick={ handleHome }
     >
       <SidebarHeader>
         <div
@@ -67,6 +66,12 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
       <SidebarContent>
 
         <Menu>
+          <MenuItem
+            icon={ FaHome }
+            onClick={ handleHome }
+          >
+            Home
+          </MenuItem>
           <MenuItem
             icon={<FaRocket />}
             onClick={handleMenuDesenvolver}
