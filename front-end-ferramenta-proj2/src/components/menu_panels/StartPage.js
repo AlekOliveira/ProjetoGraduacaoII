@@ -4,7 +4,7 @@ import { CustomDialog, useDialog } from 'react-st-modal';
 
 import apiCICD from '../../services/apiCICD';
 
-function StartPage() {
+function StartPage({ setPage }) {
   const [myRepos, setMyRepos] = useState([]);
 
   useEffect(() =>{ 
@@ -14,13 +14,18 @@ function StartPage() {
     });
   }, [])
 
+  const handleClickProject = (repo) => {
+    localStorage.setItem('project', repo);
+    setPage('menu-desenvolver');
+  }
+
   async function modalRepositorios() {
     const result = await CustomDialog(
       <>
         <ul>
           {myRepos.map(repo =>
             <>
-              <li key={repo}><button>{repo}</button></li>              
+              <li key={repo}><button onClick={ () => handleClickProject(repo) }>{repo}</button></li>
             </>
           )
           }

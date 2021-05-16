@@ -53,13 +53,17 @@ function Layout({ setLocale }) {
   function renderMenu() {
     switch (page) {
       case 'page-start':
-        return <StartPage />;
+        return <StartPage
+                setPage={setPage}
+              />;
       case 'menu-cicd':
         return <MenuCICD />;
       case 'menu-desenvolver':
         return <MenuDev />;
       default:
-        return <StartPage />;
+        return <StartPage
+          setPage={setPage}
+        />;
     }
   }
   
