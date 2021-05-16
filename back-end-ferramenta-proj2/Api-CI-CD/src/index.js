@@ -3,17 +3,19 @@ const cors = require('cors');
 const shell = require('shelljs');
 const pathResolve = require('path');
 const hasYarn = require('has-yarn');
+const bodyParser = require('body-parser');
+const fs = require('fs');
 
-const { request, response } = require('express');
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
 //cwd - current working directory
 let cwd = '';
 let featureName = '';
 let currentBranch = '';
+const reposPath = pathResolve.join(__dirname, '..\\repos');
 
 // ROUTES
 // app.post('/deleteLocalBranch', (request, response) => {
@@ -27,9 +29,11 @@ let currentBranch = '';
 // });
 
 app.get('/myRepos', (req, res) => {
-  const reposPath = pathResolve.join(__dirname, '..\\repos');
+  if(!fs.existsSync(reposPath)) {
+    shell.mkdir(reposPath);
+  }
   shell.cd(reposPath);
-  
+
   return res.json(shell.ls());
 });
 
@@ -100,6 +104,7 @@ app.get('/configRepo', (request, response) => {
 });
 
 app.post('/clone', (request, response) => {
+  shell.cd(reposPath);
   shell.exec(`git clone ${request.body.repositoryUrl}`);
   //entrar na pasta do repo clonado?  
   

@@ -6,13 +6,16 @@ import apiCICD from '../../services/apiCICD';
 
 function StartPage({ setPage }) {
   const [myRepos, setMyRepos] = useState([]);
+  const [inputRepUrl, setInputRepUrl] = useState('');
 
-  useEffect(() =>{ 
-    apiCICD.get('myRepos').then(response => {  
-      console.log(response.data);    
-      setMyRepos(response.data);
-    });
-  }, [])
+  const handleClickClone = () => {
+    const repositoryUrl = document.getElementById('repositoryUrl').value;
+    console.log(repositoryUrl);
+    apiCICD.post('clone', { repositoryUrl })
+      .then(response => {
+        console.log(response.data);
+      });
+  };
 
   const handleClickProject = (repo) => {
     localStorage.setItem('project', repo);
@@ -20,6 +23,10 @@ function StartPage({ setPage }) {
   }
 
   async function modalRepositorios() {
+
+    const response = await apiCICD.get('myRepos');
+    setMyRepos(response.data);
+
     const result = await CustomDialog(
       <>
         <ul>
@@ -36,7 +43,7 @@ function StartPage({ setPage }) {
           showCloseIcon: true,
           isBodyScrollLocked: true,
           replaceScrollBar: true,
-        }      
+        }
     );
 
     if (result) {
@@ -49,15 +56,15 @@ function StartPage({ setPage }) {
   async function modalClone() {
     const result = await CustomDialog(
       <>
-        <input type="text" placeholder=""/>
-        <button>Clonar!</button>
+        <input type="text" placeholder="" id="repositoryUrl" onChange={(e) => setInputRepUrl(e.target.value)}/>
+        <button onClick={ handleClickClone }>Clonar!</button>
       </>,
         {
           title: 'Clonar Repositório',
           showCloseIcon: true,
           isBodyScrollLocked: true,
           replaceScrollBar: true,
-        }      
+        }
     );
 
     if (result) {
@@ -69,7 +76,7 @@ function StartPage({ setPage }) {
 
   return(
     <main>
-      <h1><FaRocket/> Bem vindo ao [DevTools]</h1>  
+      <h1><FaRocket/> Bem vindo ao [DevTools]</h1>
       <p>
         <b>
           Mussum Ipsum, cacilds vidis litro abertis. Praesent vel viverra nisi. 
@@ -79,12 +86,12 @@ function StartPage({ setPage }) {
         </b>
       </p>
 
-      
+
       <button onClick={modalRepositorios}>Selecionar um repositório</button>
       <br/>
-      <button onClick={modalClone}>Clonar repositório</button>  
-      
-      {/* 
+      <button onClick={modalClone}>Clonar repositório</button>
+
+      {/*
         Após abrir um projeto, verificar se o mesmo já está configurado.
             caso não, é inicializado o assistente de configuração.
         Estando configurado, o usuario é direcionado para a pagina de desenvolvimento.
@@ -109,7 +116,7 @@ function StartPage({ setPage }) {
 
 
 
-    </main>    
+    </main>
   );
 }
 export default StartPage;
