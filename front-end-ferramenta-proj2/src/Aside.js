@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useIntl } from 'react-intl';
 import {
   ProSidebar,
@@ -9,7 +10,7 @@ import {
   SidebarFooter,
   SidebarContent,
 } from 'react-pro-sidebar';
-import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaCog, FaCodeBranch, FaCogs, FaRocket } from 'react-icons/fa';
+import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaCog, FaCodeBranch, FaCogs, FaRocket, FaHome } from 'react-icons/fa';
 import sidebarBg from './assets/bg1.jpg';
 
 const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) => {
@@ -29,6 +30,10 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
 
   async function handleMenuDeploy() {
     setPage('menu-deploy');
+  }
+
+  async function handleHome() {
+    setPage('home');
   }
 
   return (
@@ -61,6 +66,12 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
       <SidebarContent>
 
         <Menu>
+          <MenuItem
+            icon={ FaHome }
+            onClick={ handleHome }
+          >
+            Home
+          </MenuItem>
           <MenuItem
             icon={<FaRocket />}
             onClick={handleMenuDesenvolver}
