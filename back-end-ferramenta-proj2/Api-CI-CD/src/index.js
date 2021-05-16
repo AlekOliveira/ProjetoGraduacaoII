@@ -146,13 +146,27 @@ app.post('/sendChanges', (request, response) => {
   
   return response.json();
 });
+
+app.get('/repoBranches', (req, res) =>{ 
+  /** 
+   * * 'git branch -r' show all remote branchs 
+   * *  when you don't have a remote branch in your project and uses the 
+   * * 'git checkout +remoteBranchName' command, a new local branch is created 
+   * *  and git sets up to track the existing remote branch. 
+   * */
+
+  shell.exec('git branch -r');
+  let repos = shell.exec('git branch -r'); 
+  repos = repos.replace(/  origin\//g, ''); //remove ' origin/' 
+  repos = repos.split('\n'); //split the branches 
+  repos.splice(0,1); //remove origin/HEAD -> origin/main string 
+  repos.splice(-1,1); //remove element with empty string
+  repos.reverse(); //put branch 'main' in first place
+  
+  return res.json(repos); 
+});
 // ROUTES
 
 app.listen(3333, () => {
   console.log('🚀 Back-end started')
 });
-
-/**
- * TO-DO
- * delete remote branch after auto-merge(repo configs) 
- */

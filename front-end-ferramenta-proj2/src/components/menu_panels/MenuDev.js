@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaCodeBranch, FaRocket } from 'react-icons/fa';
+import apiCICD from '../../services/apiCICD';
 
 function MenuDev() {
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    apiCICD.get('repoBranches').then(res => {
+      setBranches((res.data));
+    })
+  }, [])
+
   return(
     <main>
       <h1><FaRocket/> Desenvolver</h1>  
@@ -16,10 +25,15 @@ function MenuDev() {
 
       <>
         <p><b><FaCodeBranch/> Qual branch você deseja modificar?</b></p>
+        
         <select name="" id="select-branch">
-          <option value="">branch Main</option>
-          <option value="">branch Testes</option>
-          <option value="">branch 2.0</option>
+          {
+            branches.map(branch => 
+              <>
+                <option value="">{branch}</option>
+              </>
+            )
+          }
         </select>
       </>
       

@@ -18,7 +18,8 @@ function StartPage({ setPage }) {
   };
 
   const handleClickProject = (repo) => {
-    localStorage.setItem('project', repo);
+    //localStorage.setItem('project', repo);
+    apiCICD.post('selectRepo', { repo });
     setPage('menu-desenvolver');
   }
 
