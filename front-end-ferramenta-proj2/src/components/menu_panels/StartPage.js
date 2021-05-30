@@ -1,17 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaRocket } from 'react-icons/fa';
-import { CustomDialog, useDialog } from 'react-st-modal';
+import Modal from '@material-ui/core/Modal';
+import { makeStyles } from '@material-ui/core/styles';
 
 import apiCICD from '../../services/apiCICD';
 
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
+
+
 function StartPage({ setPage }) {
+  const classes = useStyles();
   const [myRepos, setMyRepos] = useState([]);
   const [inputRepUrl, setInputRepUrl] = useState('');
+  const [openModal, setOpenModal] = useState('');
 
   const handleClickClone = () => {
-    const repositoryUrl = document.getElementById('repositoryUrl').value;
-    console.log(repositoryUrl);
-    apiCICD.post('clone', { repositoryUrl })
+    apiCICD.post('clone', { repositoryUrl : inputRepUrl })
       .then(response => {
         console.log(response.data);
       });
@@ -23,56 +39,48 @@ function StartPage({ setPage }) {
     setPage('menu-desenvolver');
   }
 
-  async function modalRepositorios() {
-
+  const handleClickRepository = async () => {
     const response = await apiCICD.get('myRepos');
     setMyRepos(response.data);
 
-    const result = await CustomDialog(
-      <>
-        <ul>
-          {myRepos.map(repo =>
-            <>
-              <li key={repo}><button onClick={ () => handleClickProject(repo) }>{repo}</button></li>
-            </>
-          )
-          }
-        </ul>
-      </>,
-        {
-          title: 'Repositórios disponíveis',
-          showCloseIcon: true,
-          isBodyScrollLocked: true,
-          replaceScrollBar: true,
-        }
-    );
-
-    if (result) {
-      // Сonfirmation confirmed
-    } else {
-      // Сonfirmation not confirmed
-    }
+    setOpenModal('repos');
   }
 
-  async function modalClone() {
-    const result = await CustomDialog(
-      <>
-        <input type="text" placeholder="" id="repositoryUrl" onChange={(e) => setInputRepUrl(e.target.value)}/>
-        <button onClick={ handleClickClone }>Clonar!</button>
-      </>,
-        {
-          title: 'Clonar Repositório',
-          showCloseIcon: true,
-          isBodyScrollLocked: true,
-          replaceScrollBar: true,
-        }
+  const renderModal = () => {
+    return (
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={openModal}
+        onClose={() => setOpenModal('')}
+        className={classes.modal}
+      >
+        <div className={classes.paper}>
+          {
+            openModal === 'clone' ?
+              <>
+                <h2>Clonar repositório</h2>
+                <input type="text" placeholder="" id="repositoryUrl" value={inputRepUrl} onChange={(e) => setInputRepUrl(e.target.value)}/>
+                <button onClick={ handleClickClone }>Clonar!</button>
+              </>
+              :
+              <>
+                <h2>Selecionar repositório</h2>
+                <ul>
+                  {myRepos.map(repo =>
+                    <>
+                      <li key={repo}>
+                        <button onClick={ () => handleClickProject(repo) }>{repo}</button>
+                      </li>
+                    </>
+                  )
+                  }
+                </ul>
+              </>
+          }
+        </div>
+      </Modal>
     );
-
-    if (result) {
-      // Сonfirmation confirmed
-    } else {
-      // Сonfirmation not confirmed
-    }
   }
 
   return(
@@ -80,17 +88,17 @@ function StartPage({ setPage }) {
       <h1><FaRocket/> Bem vindo ao [DevTools]</h1>
       <p>
         <b>
-          Mussum Ipsum, cacilds vidis litro abertis. Praesent vel viverra nisi. 
-          Mauris aliquet nunc non turpis scelerisque, eget. Suco de cevadiss deixa 
-          as pessoas mais interessantis. Detraxit consequat et quo num tendi nada. 
+          Mussum Ipsum, cacilds vidis litro abertis. Praesent vel viverra nisi.
+          Mauris aliquet nunc non turpis scelerisque, eget. Suco de cevadiss deixa
+          as pessoas mais interessantis. Detraxit consequat et quo num tendi nada.
           Interagi no mé, cursus quis, vehicula ac nisi.
         </b>
       </p>
 
 
-      <button onClick={modalRepositorios}>Selecionar um repositório</button>
+      <button onClick={handleClickRepository}>Selecionar um repositório</button>
       <br/>
-      <button onClick={modalClone}>Clonar repositório</button>
+      <button onClick={() => setOpenModal('clone')}>Clonar repositório</button>
 
       {/*
         Após abrir um projeto, verificar se o mesmo já está configurado.
@@ -115,7 +123,7 @@ function StartPage({ setPage }) {
         Custom
       </button> */}
 
-
+      { renderModal() }
 
     </main>
   );
