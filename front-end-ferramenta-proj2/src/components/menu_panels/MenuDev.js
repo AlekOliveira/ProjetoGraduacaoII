@@ -23,12 +23,22 @@ function MenuDev() {
   const [branches, setBranches] = useState([]);
   const [openModal, setOpenModal] = useState('');
   const [inputNewFeat, setInputnewFeat] = useState('');
+  const [selectedBranch, setSelectedBranch] = useState(''); 
 
   useEffect(() => {
     apiCICD.get('repoBranches').then(res => {
       setBranches((res.data));
+      setSelectedBranch((res.data[0]));
     })
   }, []);
+
+  useEffect(() => {
+    apiCICD.post('/switchBranch', { branchName: selectedBranch });
+  }, [selectedBranch]);
+
+  const handleClickSwitchBranch = async (branch) => {
+    setSelectedBranch(branch);  
+  }
 
   const handleClickNewFeat = async () => {
     await apiCICD.post('/newFeature', { featureName: inputNewFeat });
@@ -81,12 +91,13 @@ function MenuDev() {
       <>
         <p><b><FaCodeBranch/> Qual branch você deseja modificar?</b></p>
 
-        <select name="" id="select-branch">
+        <select 
+          id="select-branch"
+          onChange={ e => handleClickSwitchBranch(e.target.value) }
+        >
           {
             branches.map(branch =>
-              <>
-                <option value="">{branch}</option>
-              </>
+              <option value={branch} key={branch}>{branch}</option>              
             )
           }
         </select>

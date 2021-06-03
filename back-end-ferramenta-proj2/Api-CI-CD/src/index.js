@@ -39,8 +39,9 @@ app.get('/myRepos', (req, res) => {
 
 app.post('/switchBranch', (request, response) => {
   //validar caso tenha unstaged changes.
-  //pode ser resolvido com um git discard || git commit.
-  currentBranch = request.body.branchName;
+  //pode ser resolvido usando um stash ou stash com discard
+  
+  currentBranch = request.body.branchName;  
   shell.exec(`git checkout ${currentBranch}`);
 
   return response.json();
@@ -155,14 +156,21 @@ app.get('/repoBranches', (req, res) =>{
    * *  and git sets up to track the existing remote branch.
    * */
 
-  let repos = shell.exec('git branch -a');
-  repos = repos.replace(/remotes\/origin\/master/g, '')
-  .replace(/  origin\//g, '')
-  .replace(/  remotes\/origin\//g, '')
-  .replace(/HEAD -> origin\/master/g, '');
-  repos = repos.split('\n'); //split the branches
-  repos = repos.filter(r => r !== '');
-  repos.pop();
+  // let repos = shell.exec('git branch -a');
+  // repos = repos.replace(/remotes\/origin\/master/g, '')
+  // .replace(/  origin\//g, '')
+  // .replace(/  remotes\/origin\//g, '')
+  // .replace(/HEAD -> origin\/master/g, '');
+  // repos = repos.split('\n'); //split the branches
+  // repos = repos.filter(r => r !== '');
+  // repos.pop();
+
+  let repos = shell.exec('git branch -r');
+  repos = repos.replace(/  origin\//g, ''); //remove ' origin/' 
+  repos = repos.split('\n'); //split the branches 
+  repos.splice(0,1); //remove origin/HEAD -> origin/main string 
+  repos.pop(); //remove element with empty string
+  repos.reverse(); //put branch 'main' in first place
 
   return res.json(repos);
 });

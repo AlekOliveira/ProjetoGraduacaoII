@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function StartPage({ setPage }) {
   const classes = useStyles();
   const [myRepos, setMyRepos] = useState([]);
