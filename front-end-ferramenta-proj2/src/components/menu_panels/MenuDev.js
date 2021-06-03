@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaCodeBranch, FaRocket } from 'react-icons/fa';
+import { FaBoxOpen, FaCodeBranch, FaRocket } from 'react-icons/fa';
 import apiCICD from '../../services/apiCICD';
 import Modal from '@material-ui/core/Modal';
 import { makeStyles } from '@material-ui/core/styles';
@@ -35,6 +35,10 @@ function MenuDev() {
   useEffect(() => {
     apiCICD.post('/switchBranch', { branchName: selectedBranch });
   }, [selectedBranch]);
+
+  const handleClickEdit = async () => {
+    await apiCICD.get('/openVscode');    
+  }
 
   const handleClickSwitchBranch = async (branch) => {
     setSelectedBranch(branch);  
@@ -89,7 +93,10 @@ function MenuDev() {
       </p>
 
       <>
-        <p><b><FaCodeBranch/> Qual branch você deseja modificar?</b></p>
+        <p><b><FaCodeBranch/> Seleção de branchs</b></p>
+        <p>Delegadis gente finis, bibendum egestas augue arcu ut est. Pra lá , 
+          depois divoltis porris, paradis.
+        </p> 
 
         <select 
           id="select-branch"
@@ -105,14 +112,21 @@ function MenuDev() {
 
       <>
         <br/>
+        <p><b><FaBoxOpen/> Ações disponíveis</b></p>
+        <p>Delegadis gente finis, bibendum egestas augue arcu ut est. Pra lá , 
+          depois divoltis porris, paradis.
+        </p>       
+
+        <br/>
         <button onClick={() => setOpenModal('newFeat')}>Nova Mudança</button>
+        <br/>
+        <button onClick={ handleClickEdit }>Editar com VSCode</button>
         <br/>
         <button>Retirar para correção</button>
         <br/>
         <button>Enviar Mudanças</button>
         <br/>
       </>
-      <p>Delegadis gente finis, bibendum egestas augue arcu ut est. Pra lá , depois divoltis porris, paradis. Casamentiss faiz malandris se pirulitá. Nec orci ornare consequat. Praesent lacinia ultrices consectetur. Sed non ipsum felis.</p>
       { renderModal() }
     </main>
   );
