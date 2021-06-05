@@ -149,13 +149,6 @@ app.post('/sendChanges', (request, response) => {
 });
 
 app.get('/repoBranches', (req, res) =>{
-  /**
-   * * 'git branch -r' show all remote branchs
-   * *  when you don't have a remote branch in your project and uses the
-   * * 'git checkout +remoteBranchName' command, a new local branch is created
-   * *  and git sets up to track the existing remote branch.
-   * */
-
   // let repos = shell.exec('git branch -a');
   // repos = repos.replace(/remotes\/origin\/master/g, '')
   // .replace(/  origin\//g, '')
@@ -165,14 +158,34 @@ app.get('/repoBranches', (req, res) =>{
   // repos = repos.filter(r => r !== '');
   // repos.pop();
 
-  let repos = shell.exec('git branch -r');
-  repos = repos.replace(/  origin\//g, ''); //remove ' origin/' 
-  repos = repos.split('\n'); //split the branches 
-  repos.splice(0,1); //remove origin/HEAD -> origin/main string 
-  repos.pop(); //remove element with empty string
-  repos.reverse(); //put branch 'main' in first place
+  // let repos = shell.exec('git branch -r');
+  // repos = repos.replace(/  origin\//g, ''); //remove ' origin/' 
+  // repos = repos.split('\n'); //split the branches 
+  // repos.splice(0,1); //remove origin/HEAD -> origin/main string 
+  // repos.pop(); //remove element with empty string
+  // repos.reverse(); //put branch 'main' in first place
 
+  let repos = shell.exec('git branch -a');
+  repos = repos.replace(/ /g, '')
+  .replace('*', '')
+  .replace(/remotes\/origin\//g, '')
+  .replace(/HEAD->origin\/master/g, '')
+  .replace(/HEAD->origin\/main/g, '');
+
+  repos = repos.split('\n'); //split the branches 
+  repos = repos.filter(r => r !== '');
+  repos = [...new Set(repos)];
+  repos.reverse();
+  
   return res.json(repos);
+});
+
+app.get('/auth', (req, res) =>{
+  shell.exec('gh auth login -w');
+  shell.exit(1);
+
+
+  return res.json('OK');
 });
 // ROUTES
 
