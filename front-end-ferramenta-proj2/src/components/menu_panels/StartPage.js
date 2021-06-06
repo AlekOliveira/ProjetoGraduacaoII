@@ -24,25 +24,50 @@ function StartPage({ setPage }) {
   const [myRepos, setMyRepos] = useState([]);
   const [inputRepUrl, setInputRepUrl] = useState('');
   const [openModal, setOpenModal] = useState('');
+  const [formConfigInfo, setFormConfigInfo] = useState({
+    ip: '',
+    first_time_commands: '',
+    commands: '',
+  });
 
   const handleClickClone = () => {
     apiCICD.post('clone', { repositoryUrl : inputRepUrl })
-      .then(response => {
-        console.log(response.data);
+      .then(({ data }) => {
+        console.log(data)
+        apiCICD.post('isRepoConfig', { repoName: data.repoName }).then(({ data }) => {
+          if(data) {
+            setOpenModal('');
+          }
+          else {
+            setOpenModal('config');
+          }
+        });
       });
   };
 
   const handleClickProject = (repo) => {
-    //localStorage.setItem('project', repo);
     apiCICD.post('selectRepo', { repo });
     setPage('menu-desenvolver');
-  }
+  };
 
   const handleClickRepository = async () => {
     const response = await apiCICD.get('myRepos');
     setMyRepos(response.data);
 
     setOpenModal('repos');
+  };
+
+  const handleChangeConfig = (({ target: { name, value }}) => {
+    setFormConfigInfo((lastState) => ({...lastState, [name]: value}));
+  });
+
+  const handleClickConfigRepo = () => {
+    const data = { ...formConfigInfo };
+    data.repository = inputRepUrl;
+
+    apiCICD.post('configRepo', { data }).then(({ data }) => {
+      setOpenModal('');
+    });
   }
 
   const renderModal = () => {
@@ -59,23 +84,32 @@ function StartPage({ setPage }) {
             openModal === 'clone' ?
               <>
                 <h2>Clonar repositório</h2>
-                <input type="text" placeholder="" id="repositoryUrl" value={inputRepUrl} onChange={(e) => setInputRepUrl(e.target.value)}/>
+                <input type="text" placeholder="Url repositório" id="repositoryUrl" value={inputRepUrl} onChange={(e) => setInputRepUrl(e.target.value)}/>
                 <button onClick={ handleClickClone }>Clonar!</button>
               </>
-              :
-              <>
-                <h2>Selecionar repositório</h2>
-                <ul>
-                  {myRepos.map(repo =>
-                    <>
-                      <li key={repo}>
-                        <button onClick={ () => handleClickProject(repo) }>{repo}</button>
-                      </li>
-                    </>
-                  )
-                  }
-                </ul>
-              </>
+              : ( openModal === 'config' ?
+                <>
+                  <h2>Configurar repositório</h2>
+                  <input id="ip" name="ip" onChange={ handleChangeConfig } value={ formConfigInfo.ip }/>
+                  <input id="first_time_commands" name="first_time_commands" onChange={ handleChangeConfig } value={ formConfigInfo.first_time_commands }/>
+                  <input id="commands" name="commands" onChange={ handleChangeConfig } value={ formConfigInfo.commands }/>
+                  <button onClick={ handleClickConfigRepo }>Configurar</button>
+                </>
+                :
+                <>
+                  <h2>Selecionar repositório</h2>
+                  <ul>
+                    {myRepos.map(repo =>
+                      <>
+                        <li key={repo}>
+                          <button onClick={ () => handleClickProject(repo) }>{repo}</button>
+                        </li>
+                      </>
+                    )
+                    }
+                  </ul>
+                </>
+              )
           }
         </div>
       </Modal>
