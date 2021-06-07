@@ -73,13 +73,13 @@ app.post('/configRepo', async (request, response) => {
    * 2-instala o framework jest para npm ou yarn
    */  
   await shell.cd(cwd);
-  /*if(hasYarn(cwd)) {
+  if(hasYarn(cwd)) {
     //console.log('este projeto utiliza yarn');
     shell.exec('yarn add jest -D');
   } else {
     //console.log('este projeto utiliza npm');
     shell.exec('npm i -D jest');
-  }*/
+  }
 
   /**Cria um diretório com um teste de exemplo */
   shell.cd('src');
@@ -109,6 +109,7 @@ app.post('/configRepo', async (request, response) => {
   cdFile = cdFile.replace(/\$replaceIPHere/, data.ip);
 
   fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], 'cd.yml'), cdFile);
+  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], '../config.json'));
   command = `copy ${workflowFilesPath} ${shell.dirs()}`; // NAO FUNCIONA NO LINUX 
   shell.exec(command);
   //config CI workflows 
