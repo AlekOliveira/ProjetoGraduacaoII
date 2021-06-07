@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 let cwd = '';
 let featureName = '';
 let currentBranch = '';
+let currentRepo = '';
 const reposPath = pathResolve.join(__dirname, '..\\repos');
 
 // ROUTES
@@ -27,6 +28,12 @@ const reposPath = pathResolve.join(__dirname, '..\\repos');
 
 //   return response.json();
 // });
+
+
+app.post('/isRepoConfig', (req, res) => {
+  const repoUrl = pathResolve.resolve(reposPath, currentRepo, '.github', 'workflows', 'config.json');
+  res.send(fs.existsSync(repoUrl));
+});
 
 app.get('/myRepos', (req, res) => {
   if(!fs.existsSync(reposPath)) {
@@ -54,8 +61,9 @@ app.get('/openVscode', (req, res) => {
   return res.json();
 });
 
-app.get('/configRepo', (request, response) => {  
+app.post('/configRepo', async (request, response) => {  
   console.log(cwd);
+  const { data } = request.body;
   //add tudo na branch principal. na primeira config
   // add && push
   let command = '';  
@@ -64,6 +72,7 @@ app.get('/configRepo', (request, response) => {
    * 1-verifica qual gerenciador de dependencias o projeto utiliza
    * 2-instala o framework jest para npm ou yarn
    */  
+  await shell.cd(cwd);
   if(hasYarn(cwd)) {
     //console.log('este projeto utiliza yarn');
     shell.exec('yarn add jest -D');
@@ -71,7 +80,7 @@ app.get('/configRepo', (request, response) => {
     //console.log('este projeto utiliza npm');
     shell.exec('npm i -D jest');
   }
-  
+
   /**Cria um diretório com um teste de exemplo */
   shell.cd('src');
   shell.mkdir('_tests_');
@@ -94,8 +103,14 @@ app.get('/configRepo', (request, response) => {
       pathResolve.join(__dirname, '..\\workflowFiles\\yarn')
       :
       pathResolve.join(__dirname, '..\\workflowFiles\\npm');
-  
-  command = `copy ${workflowFilesPath} ${shell.dirs()}`;
+
+  let cdFile = fs.readFileSync(pathResolve.resolve(__dirname, '../workflowFiles', 'autoDeploy', 'cd.yml')).toString();
+  cdFile = cdFile.replace(/\$replaceDataHere/, JSON.stringify(data));
+  cdFile = cdFile.replace(/\$replaceIPHere/, data.ip);
+
+  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], 'cd.yml'), cdFile);
+  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], '../config.json'));
+  command = `copy ${workflowFilesPath} ${shell.dirs()}`; // NAO FUNCIONA NO LINUX 
   shell.exec(command);
   //config CI workflows 
 
@@ -107,9 +122,11 @@ app.get('/configRepo', (request, response) => {
 app.post('/clone', (request, response) => {
   shell.cd(reposPath);
   shell.exec(`git clone ${request.body.repositoryUrl}`);
-  //entrar na pasta do repo clonado?  
-  
-  return response.json();
+  //entrar na pasta do repo clonado?
+  const repoNameSplit = request.body.repositoryUrl.split('/');
+  const repoName = repoNameSplit[repoNameSplit.length - 1].replace(/.git/, '');
+  cwd = pathResolve.join(__dirname, '..\\repos', repoName);
+  return response.json({ repoName });
 });
 
 // app.post('/changePath', (request, response) => {   
@@ -120,7 +137,7 @@ app.post('/clone', (request, response) => {
 // });
 
 app.post('/selectRepo', (req, res) => { 
-  cwd = pathResolve.join(__dirname, '..\\repos', req.body.repo);  
+  cwd = pathResolve.join(__dirname, '..\\repos', req.body.repo);
   shell.cd(cwd);
 
   return res.json(shell.ls());
