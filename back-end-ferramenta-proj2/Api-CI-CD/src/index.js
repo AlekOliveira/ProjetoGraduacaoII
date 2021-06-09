@@ -17,6 +17,7 @@ let featureName = '';
 let currentBranch = '';
 let currentRepo = '';
 const reposPath = pathResolve.join(__dirname, '..\\repos');
+const scriptsPath = pathResolve.join(__dirname, '..\\scripts');
 
 // ROUTES
 // app.post('/deleteLocalBranch', (request, response) => {
@@ -197,12 +198,20 @@ app.get('/repoBranches', (req, res) =>{
   return res.json(repos);
 });
 
-app.get('/auth', (req, res) =>{
-  shell.exec('gh auth login -w');
-  shell.exit(1);
+app.get('/auth', (req, res) => {  
+  const loginScriptPath = pathResolve.join(scriptsPath, 'gh-login.bat');
 
+  const { exec } = require('child_process');
+  exec(`start cmd /c ${loginScriptPath}`, (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(stdout);
+  }
+  );
 
-  return res.json('OK');
+  return res.json();
 });
 // ROUTES
 
