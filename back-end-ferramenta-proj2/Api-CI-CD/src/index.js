@@ -109,12 +109,16 @@ app.post('/configRepo', async (request, response) => {
   cdFile = cdFile.replace(/\$replaceIPHere/, data.ip);
 
   fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], 'cd.yml'), cdFile);
-  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], '../config.json'));
+  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], '../config.json'), JSON.stringify({}));
   command = `copy ${workflowFilesPath} ${shell.dirs()}`; // NAO FUNCIONA NO LINUX 
   shell.exec(command);
   //config CI workflows 
 
   shell.cd(cwd);
+
+  shell.exec('git add *');
+  shell.exec('git commit -m "config repo"');
+  shell.exec('git push origin master');
 
   return response.json();
 });
