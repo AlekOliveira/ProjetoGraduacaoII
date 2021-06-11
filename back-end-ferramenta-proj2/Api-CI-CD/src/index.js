@@ -31,7 +31,7 @@ const reposPath = pathResolve.join(__dirname, '..\\repos');
 
 
 app.post('/isRepoConfig', (req, res) => {
-  const repoUrl = pathResolve.resolve(reposPath, currentRepo, '.github', 'workflows', 'config.json');
+  const repoUrl = pathResolve.resolve(cwd, '.github', 'config.json');
   res.send(fs.existsSync(repoUrl));
 });
 
