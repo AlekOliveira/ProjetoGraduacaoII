@@ -17,8 +17,8 @@ export default {
     viewSource: 'عرض الكود',
   },
   en: {
-    title: 'React Pro Sidebar',
-    sidebarTitle: 'Pro Sidebar',
+    title: '[DevTools]',
+    sidebarTitle: '[DevTools]',
     description:
       'React sidebar library with dropdown menus and unlimited number of nested submenus',
     dashboard: 'Dashboard',

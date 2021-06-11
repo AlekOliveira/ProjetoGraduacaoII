@@ -67,7 +67,7 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
 
         <Menu>
           <MenuItem
-            icon={ FaHome }
+            icon={ <FaHome /> }
             onClick={ handleHome }
           >
             Home
