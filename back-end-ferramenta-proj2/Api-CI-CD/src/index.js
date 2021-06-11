@@ -32,7 +32,7 @@ const scriptsPath = pathResolve.join(__dirname, '..\\scripts');
 
 
 app.post('/isRepoConfig', (req, res) => {
-  const repoUrl = pathResolve.resolve(reposPath, currentRepo, '.github', 'workflows', 'config.json');
+  const repoUrl = pathResolve.resolve(cwd, '.github', 'config.json');
   res.send(fs.existsSync(repoUrl));
 });
 
