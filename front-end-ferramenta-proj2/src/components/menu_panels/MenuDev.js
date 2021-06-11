@@ -85,18 +85,13 @@ function MenuDev() {
       <h1><FaRocket/> Desenvolver</h1>
       <p>
         <b>
-          Mussum Ipsum, cacilds vidis litro abertis. Praesent vel viverra nisi. 
-          Mauris aliquet nunc non turpis scelerisque, eget. Suco de cevadiss deixa 
-          as pessoas mais interessantis. Detraxit consequat et quo num tendi nada. 
-          Interagi no mé, cursus quis, vehicula ac nisi.
+          Você acabou de decolar!<br />
+          Nesta seção você pode selecionar como e onde trabalhar.<br />
         </b>
       </p>
 
       <>
-        <p><b><FaCodeBranch/> Seleção de branchs</b></p>
-        <p>Delegadis gente finis, bibendum egestas augue arcu ut est. Pra lá , 
-          depois divoltis porris, paradis.
-        </p> 
+        <p><b><FaCodeBranch/> Seleção de branchs</b></p>        
 
         <select 
           id="select-branch"
@@ -113,16 +108,11 @@ function MenuDev() {
       <>
         <br/>
         <p><b><FaBoxOpen/> Ações disponíveis</b></p>
-        <p>Delegadis gente finis, bibendum egestas augue arcu ut est. Pra lá , 
-          depois divoltis porris, paradis.
-        </p>       
 
         <br/>
         <button onClick={() => setOpenModal('newFeat')}>Nova Mudança</button>
         <br/>
         <button onClick={ handleClickEdit }>Editar com VSCode</button>
-        <br/>
-        <button>Retirar para correção</button>
         <br/>
         <button>Enviar Mudanças</button>
         <br/>
