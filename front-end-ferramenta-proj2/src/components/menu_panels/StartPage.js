@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaRocket } from 'react-icons/fa';
 import Modal from '@material-ui/core/Modal';
 import { makeStyles } from '@material-ui/core/styles';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 import apiCICD from '../../services/apiCICD';
+import cdFile from '../../assets/CI';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -24,6 +26,7 @@ function StartPage({ setPage }) {
   const [myRepos, setMyRepos] = useState([]);
   const [inputRepUrl, setInputRepUrl] = useState('');
   const [openModal, setOpenModal] = useState('');
+  const [ciFileInput, setCiFileInput] = useState(cdFile);
   const [formConfigInfo, setFormConfigInfo] = useState({
     ip: '',
     first_time_commands: '',
@@ -45,6 +48,15 @@ function StartPage({ setPage }) {
       });
   };
 
+  useEffect(() => {
+    let file = cdFile;
+    file = file.replace(/\$replaceIPHere/, formConfigInfo.ip);
+    file = file.replace(/\$repoHere/, inputRepUrl);
+    file = file.replace(/\$firstHere/, JSON.stringify([formConfigInfo.first_time_commands]));
+    file = file.replace(/\$commandsHere/, JSON.stringify([formConfigInfo.commands]));
+    setCiFileInput(file);
+  }, [formConfigInfo]);
+
   const handleClickProject = (repo) => {
     apiCICD.post('selectRepo', { repo });
     setPage('menu-desenvolver');
@@ -62,10 +74,7 @@ function StartPage({ setPage }) {
   });
 
   const handleClickConfigRepo = () => {
-    const data = { ...formConfigInfo };
-    data.repository = inputRepUrl;
-
-    apiCICD.post('configRepo', { data }).then(({ data }) => {
+    apiCICD.post('configRepo', { data: ciFileInput }).then(({ data }) => {
       setOpenModal('');
     });
   }
@@ -90,9 +99,11 @@ function StartPage({ setPage }) {
               : ( openModal === 'config' ?
                 <>
                   <h2>Configurar repositório</h2>
-                  <input id="ip" name="ip" onChange={ handleChangeConfig } value={ formConfigInfo.ip }/>
-                  <input id="first_time_commands" name="first_time_commands" onChange={ handleChangeConfig } value={ formConfigInfo.first_time_commands }/>
-                  <input id="commands" name="commands" onChange={ handleChangeConfig } value={ formConfigInfo.commands }/>
+                  <TextareaAutosize value={ciFileInput} onChange={(e) => setCiFileInput(e.target.value)} style={{width: '600px'}} /><br/>
+                  <input type="text" name="ip" value={formConfigInfo.ip} placeholder="IP (com pontuação) ou URL" onChange={ handleChangeConfig } />
+                  <input type="text" name="first_time_commands" value={formConfigInfo.first_time_commands} placeholder="Prieiros comandos (separados por ,)" onChange={ handleChangeConfig } />
+                  <input type="text" name="commands" value={formConfigInfo.commands} placeholder="Comandos (separados por ,)" onChange={ handleChangeConfig } />
+
                   <button onClick={ handleClickConfigRepo }>Configurar</button>
                 </>
                 :

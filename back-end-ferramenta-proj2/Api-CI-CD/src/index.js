@@ -105,11 +105,7 @@ app.post('/configRepo', async (request, response) => {
       :
       pathResolve.join(__dirname, '..\\workflowFiles\\npm');
 
-  let cdFile = fs.readFileSync(pathResolve.resolve(__dirname, '../workflowFiles', 'autoDeploy', 'cd.yml')).toString();
-  cdFile = cdFile.replace(/\$replaceDataHere/, JSON.stringify(data));
-  cdFile = cdFile.replace(/\$replaceIPHere/, data.ip);
-
-  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], 'cd.yml'), cdFile);
+  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], 'cd.yml'), data.replace(/\"/g, '\\"'));
   fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], '../config.json'), JSON.stringify({}));
   command = `copy ${workflowFilesPath} ${shell.dirs()}`; // NAO FUNCIONA NO LINUX 
   shell.exec(command);
