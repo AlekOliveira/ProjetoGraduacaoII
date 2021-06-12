@@ -79,63 +79,16 @@ const Aside = ({ image, collapsed, rtl, toggled, handleToggleSidebar, setPage}) 
             Desenvolver
           </MenuItem>
 
-          <SubMenu
+          {/* <SubMenu
             title='Ajustes'
             icon={<FaCog />}
           >
             <MenuItem onClick={handleMenuUsuario}>Usuário</MenuItem>
             <MenuItem onClick={handleMenuCICD}>CI/CD</MenuItem>
             <MenuItem onClick={handleMenuDeploy}>Deploy</MenuItem>
-          </SubMenu>
-
-        </Menu>
-
-
-        {/* <Menu iconShape="circle">
-          <MenuItem
-            icon={<FaTachometerAlt />}
-            suffix={<span className="badge red">{intl.formatMessage({ id: 'new' })}</span>}
-          >
-            {intl.formatMessage({ id: 'dashboard' })}
-          </MenuItem>
-          <MenuItem icon={<FaGem />}> {intl.formatMessage({ id: 'components' })}</MenuItem>
-        </Menu> */}
-
-        <Menu iconShape="circle">
-          {/* <SubMenu
-            suffix={<span className="badge yellow">2</span>}
-            title={intl.formatMessage({ id: 'withSuffix' })}
-            icon={<FaRegLaughWink />}
-            >
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 1111</MenuItem>
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 2</MenuItem>
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 3</MenuItem>
           </SubMenu> */}
 
-          {/* <SubMenu
-            prefix={<span className="badge gray">3</span>}
-            title={intl.formatMessage({ id: 'withPrefix' })}
-            icon={<FaHeart />}>
-
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 1</MenuItem>
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 2</MenuItem>
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 3</MenuItem>
-          </SubMenu> */}
-
-          {/* <SubMenu title={intl.formatMessage({ id: 'multiLevel' })} icon={<FaList />}>
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 1 </MenuItem>
-            <MenuItem>{intl.formatMessage({ id: 'submenu' })} 2 </MenuItem>
-            <SubMenu title={`${intl.formatMessage({ id: 'submenu' })} 3`}>
-              <MenuItem>{intl.formatMessage({ id: 'submenu' })} 3.1 </MenuItem>
-              <MenuItem>{intl.formatMessage({ id: 'submenu' })} 3.2 </MenuItem>
-              <SubMenu title={`${intl.formatMessage({ id: 'submenu' })} 3.3`}>
-                <MenuItem>{intl.formatMessage({ id: 'submenu' })} 3.3.1 </MenuItem>
-                <MenuItem>{intl.formatMessage({ id: 'submenu' })} 3.3.2 </MenuItem>
-                <MenuItem>{intl.formatMessage({ id: 'submenu' })} 3.3.3 </MenuItem>
-              </SubMenu>
-            </SubMenu>
-          </SubMenu> */}
-        </Menu>
+        </Menu>        
       
       </SidebarContent>
 
