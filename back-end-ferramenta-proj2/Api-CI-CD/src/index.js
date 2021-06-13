@@ -55,9 +55,10 @@ app.post('/switchBranch', (request, response) => {
   return response.json();
 });
 
-app.get('/openVscode', (req, res) => {
-  const cmd = 'code .';
-  shell.exec(cmd);
+app.get('/openVscode', (req, res) => {  
+  
+  shell.cd(cwd);
+  shell.exec('code .');
 
   return res.json();
 });
@@ -138,7 +139,7 @@ app.post('/clone', (request, response) => {
 // });
 
 app.post('/selectRepo', (req, res) => { 
-  cwd = pathResolve.join(__dirname, '..\\repos', req.body.repo);
+  cwd = pathResolve.join(reposPath, req.body.repo);
   shell.cd(cwd);
 
   return res.json(shell.ls());
@@ -146,7 +147,7 @@ app.post('/selectRepo', (req, res) => {
 
 app.post('/newFeature', (request, response) => {
   currentBranch = request.body.featureName;   
-  shell.exec('git pull');
+  shell.exec('git pull origin master');
   shell.exec(`git checkout -b ${currentBranch}`);
 
   return response.json();

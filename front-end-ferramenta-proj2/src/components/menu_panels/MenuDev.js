@@ -50,6 +50,11 @@ function MenuDev() {
     setOpenModal('');
   }
 
+  const handleClickSend = async () => {
+    await apiCICD.post('/sendChanges', { commitMessage: "test" });
+    //setOpenModal('meuModal');    
+  }
+
   const infoNewFeat = () => {
     return (
       <>
@@ -74,6 +79,9 @@ function MenuDev() {
             openModal === 'newFeat' ?
               infoNewFeat() :
               null
+            // openModal === 'sendChanges' ?
+            //   infoNewFeat() :
+            // null
           }
         </div>
       </Modal>
@@ -114,7 +122,7 @@ function MenuDev() {
         <br/>
         <button onClick={ handleClickEdit }>Editar com VSCode</button>
         <br/>
-        <button>Enviar Mudanças</button>
+        <button onClick={ handleClickSend }>Enviar Mudanças</button>
         <br/>
       </>
       { renderModal() }
