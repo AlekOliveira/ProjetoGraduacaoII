@@ -16,7 +16,7 @@ jobs:
          id: deploy
          uses: fjogeleit/http-request-action@master
          with:
-           url: 'http://$replaceIPHere:6643/prod1'
+           url: 'http://$replaceIPHere:6643/prod'
            method: 'POST'
            data: '{ "repository": "$repoHere", "first_time_commands": $firstHere, "commands": $commandsHere }'
        - name: Show Response
