@@ -34,11 +34,11 @@ function StartPage({ setPage }) {
   });
 
   const handleClickClone = () => {
-    apiCICD.post('clone', { repositoryUrl : inputRepUrl })
+    apiCICD.post('clone', { repositoryUrl: inputRepUrl })
       .then(({ data }) => {
         console.log(data)
         apiCICD.post('isRepoConfig', { repoName: data.repoName }).then(({ data }) => {
-          if(data) {
+          if (data) {
             setOpenModal('');
           }
           else {
@@ -46,6 +46,8 @@ function StartPage({ setPage }) {
           }
         });
       });
+    
+    apiCICD.get('/auth');
   };
 
   useEffect(() => {
@@ -55,7 +57,7 @@ function StartPage({ setPage }) {
     file = file.replace(/\$firstHere/, JSON.stringify([formConfigInfo.first_time_commands]));
     file = file.replace(/\$commandsHere/, JSON.stringify([formConfigInfo.commands]));
     setCiFileInput(file);
-  }, [formConfigInfo]);
+  }, [formConfigInfo, inputRepUrl]);
 
   const handleClickProject = (repo) => {
     apiCICD.post('selectRepo', { repo });

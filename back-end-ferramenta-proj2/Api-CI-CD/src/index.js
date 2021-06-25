@@ -106,17 +106,26 @@ app.post('/configRepo', async (request, response) => {
       :
       pathResolve.join(__dirname, '..\\workflowFiles\\npm');
 
-  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], 'cd.yml'), data.replace(/\"/g, '\\"'));
-  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], '../config.json'), JSON.stringify({}));
+  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], 'cd.yml'), data);
   command = `copy ${workflowFilesPath} ${shell.dirs()}`; // NAO FUNCIONA NO LINUX 
   shell.exec(command);
+
   //config CI workflows 
-
-  shell.cd(cwd);
-
   shell.exec('git add *');
   shell.exec('git commit -m "config repo"');
+  shell.exec('git push origin master');  
+
+  shell.exec('git checkout -b pr-config');
+  fs.writeFileSync(pathResolve.resolve(shell.dirs()[0], '../config.json'), JSON.stringify({}));
+  shell.exec('git add -A');
+  shell.exec(`git commit -m "config"`);
+  shell.exec(`git push --set-upstream origin pr-config`);
+  shell.exec(`gh pr create --title "config" --body "config"`);
+  shell.exec('git checkout master');
+  shell.exec('git merge --no-ff pr-config');
   shell.exec('git push origin master');
+
+  shell.cd(cwd);
 
   return response.json();
 });
